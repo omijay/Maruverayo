@@ -22,7 +22,7 @@ public class CameraController : MonoBehaviour
         
     }
 
-    
+
     void Update()
     {
         invertxVal= (inverteX)? -1 : 1;
@@ -37,3 +37,4 @@ public class CameraController : MonoBehaviour
 
     }
 }
+
