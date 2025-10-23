@@ -22,7 +22,7 @@ public class CameraController : MonoBehaviour
         
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         invertxVal= (inverteX)? -1 : 1;
