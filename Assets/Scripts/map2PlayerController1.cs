@@ -20,12 +20,13 @@ public class map2PlayerController : MonoBehaviour
     CameraController cameraController;
     Animator animator;
     CharacterController characterController;
-
+    Angam angam;
     private void Awake()
     {
         cameraController = Camera.main.GetComponent<CameraController>();
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
+        angam = GetComponent<Angam>();
     }
     void Start()
     {
@@ -35,6 +36,8 @@ public class map2PlayerController : MonoBehaviour
     
     private void Update()
     {
+        if (angam.InAction)
+            return;
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
