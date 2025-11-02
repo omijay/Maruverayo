@@ -30,4 +30,23 @@ public class Angam : MonoBehaviour
         yield return new WaitForSeconds(animState.length);
         InAction = false;
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Hitbox" && !InAction) 
+        {
+            StartCoroutine(PlayHitReaction());
+
+        }
+            
+    }
+    IEnumerator PlayHitReaction()
+    {
+        InAction = true;
+        animator.CrossFade("Damage_Front_Small_ver_C", 0.2f);
+        yield return null;
+
+        var animState = animator.GetNextAnimatorStateInfo(1);
+        yield return new WaitForSeconds(animState.length);
+        InAction = false;
+    }
 }
