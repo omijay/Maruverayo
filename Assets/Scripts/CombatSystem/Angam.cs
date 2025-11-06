@@ -11,9 +11,11 @@ public class Angam : MonoBehaviour
     [SerializeField] GameObject rightHand;
     [SerializeField] List<AttackData> attacks;
 
-    BoxCollider leftHandCollider;
-    BoxCollider rightHandCollider;
+ 
+    SphereCollider leftHandCollider, rightHandCollider, leftFootCollider, rightFootCollider;
+
     Animator animator;
+
 
     private void Awake()
     {
@@ -23,13 +25,12 @@ public class Angam : MonoBehaviour
     {
         if (leftHand != null)
         {
-            leftHandCollider = leftHand.GetComponent<BoxCollider>();
-            leftHandCollider.enabled = false;
-        }
-        if (rightHand != null)
-        {
-            rightHandCollider = rightHand.GetComponent<BoxCollider>();
-            rightHandCollider.enabled = false;
+            leftHandCollider = animator.GetBoneTransform(HumanBodyBones.LeftHand).GetComponent<SphereCollider>();
+            rightHandCollider = animator.GetBoneTransform(HumanBodyBones.RightHand).GetComponent<SphereCollider>();
+            rightFootCollider = animator.GetBoneTransform(HumanBodyBones.RightFoot).GetComponent<SphereCollider>();
+            leftFootCollider = animator.GetBoneTransform(HumanBodyBones.LeftFoot).GetComponent<SphereCollider>();
+            
+            DisableAllColliders();
         }
     }
     Attackstate attackstate;
@@ -71,8 +72,7 @@ public class Angam : MonoBehaviour
                 if (normalizedTime >= attacks[comboCount].ImpactStartTime) 
                 { 
                   attackstate = Attackstate.Impact;
-                    leftHandCollider.enabled = true;
-                    rightHandCollider.enabled = true;
+                  EnableHitBox(attacks[comboCount]);
                 }
             }
             else if (attackstate == Attackstate.Impact)
@@ -80,8 +80,7 @@ public class Angam : MonoBehaviour
                 if (normalizedTime >=attacks[comboCount].ImpactEndTime)
                 {
                     attackstate = Attackstate.Cooldown;
-                    rightHandCollider.enabled = false;
-                    leftHandCollider.enabled = false;
+                   DisableAllColliders();
                 }
             }
             else if (attackstate == Attackstate.Cooldown)
@@ -121,5 +120,33 @@ public class Angam : MonoBehaviour
         var animState = animator.GetNextAnimatorStateInfo(1);
         yield return new WaitForSeconds(animState.length * 0.8f);
         InAction = false;
+    }
+    void EnableHitBox(AttackData attack)
+    {
+        switch (attack.HitboxToUse)
+        {
+            case AttackHitbox.LeftHand:
+                leftHandCollider.enabled = true;
+                break;
+            case AttackHitbox.RightHand:
+                rightHandCollider.enabled = true;
+                break;
+            case AttackHitbox.LeftFoot:
+                leftFootCollider.enabled = true;
+                break;
+            case AttackHitbox.RightFoot:
+                rightFootCollider.enabled = true;
+                break;
+            default:
+                break;
+        }
+    }
+    void DisableAllColliders()
+    {
+        leftHandCollider.enabled = false;
+        rightHandCollider.enabled = false;
+        rightFootCollider.enabled = false;
+        leftFootCollider.enabled = false;
+
     }
 }

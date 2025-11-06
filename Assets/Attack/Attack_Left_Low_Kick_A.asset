@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Attack_Left_Low_Kick_A
   m_EditorClassIdentifier: 
   <AnimName>k__BackingField: Attack_Left_Low_Kick_A
+  <HitboxToUse>k__BackingField: 2
   <ImpactStartTime>k__BackingField: 0.25
   <ImpactEndTime>k__BackingField: 0.6

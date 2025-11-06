@@ -466,29 +466,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3352812386127897833, guid: 528a046a53fcc194f88e99fbbc046fcd,
-        type: 3}
-      propertyPath: attacks.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3352812386127897833, guid: 528a046a53fcc194f88e99fbbc046fcd,
-        type: 3}
-      propertyPath: attacks.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: 4893b496d108a9a42809c91c24ebb78a,
-        type: 2}
-    - target: {fileID: 3352812386127897833, guid: 528a046a53fcc194f88e99fbbc046fcd,
-        type: 3}
-      propertyPath: attacks.Array.data[1]
-      value: 
-      objectReference: {fileID: 11400000, guid: af3e2f6fbaf6269498be83fb2e68f1f2,
-        type: 2}
-    - target: {fileID: 3352812386127897833, guid: 528a046a53fcc194f88e99fbbc046fcd,
-        type: 3}
-      propertyPath: attacks.Array.data[2]
-      value: 
-      objectReference: {fileID: 11400000, guid: 6d8ac99b8e7b0cf4fb08469c96d14d6b,
-        type: 2}
     - target: {fileID: 7368422196031470849, guid: 528a046a53fcc194f88e99fbbc046fcd,
         type: 3}
       propertyPath: m_Name
@@ -987,8 +964,8 @@ GameObject:
   m_Component:
   - component: {fileID: 543450651818994271}
   - component: {fileID: 5866666020032081957}
-  - component: {fileID: 5866666020032081958}
   - component: {fileID: 5866666020032081959}
+  - component: {fileID: 5866666020032081960}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
@@ -2405,8 +2382,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!136 &5866666020032081958
-CapsuleCollider:
+--- !u!114 &5866666020032081959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132147813478629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad18e9c81d5380c4fa25d3475a778ef2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftHand: {fileID: 0}
+  rightHand: {fileID: 0}
+  attacks: []
+--- !u!143 &5866666020032081960
+CharacterController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2423,26 +2415,14 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.3
-  m_Height: 1.8
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.9, z: 0}
---- !u!114 &5866666020032081959
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 919132147813478629}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad18e9c81d5380c4fa25d3475a778ef2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftHand: {fileID: 0}
-  rightHand: {fileID: 0}
-  attacks: []
+  serializedVersion: 3
+  m_Height: 1.78
+  m_Radius: 0.36
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.89, z: 0}
 --- !u!4 &5901452233918462172
 Transform:
   m_ObjectHideFlags: 0
