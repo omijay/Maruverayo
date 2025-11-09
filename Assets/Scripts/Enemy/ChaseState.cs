@@ -4,18 +4,22 @@ using UnityEngine;
 
 public class ChaseState : State<EnemyController>
 {
+    [SerializeField] float distanceToStand = 1.5f;
+    EnemyController enemy;
     public override void Enter(EnemyController owner)
     {
-        Debug.Log("Entered Chase State");
+        enemy = owner;
+        enemy.NavAgent.stoppingDistance = distanceToStand;
     }
 
     public override void Execute()
     {
-        Debug.Log("Executing Chase State");
+        enemy.NavAgent.SetDestination(enemy.Target.transform.position);
+        enemy.Animator.SetFloat("moveAmount", enemy.NavAgent.velocity.magnitude / enemy.NavAgent.speed);
     }
 
     public override void Exit()
     {
-        Debug.Log("Exiting Chase State");
+
     }
 }
