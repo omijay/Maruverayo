@@ -21,7 +21,7 @@ public class IdleState : State<EnemyController>
             if (angle <= enemy.Fov / 2)
             {
                 enemy.Target = target;
-                enemy.ChangeState(EnemyStates.Chase);
+                enemy.ChangeState(EnemyStates.CombatMovement);
                 break;
             }
         }

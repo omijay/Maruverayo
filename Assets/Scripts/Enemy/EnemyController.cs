@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum EnemyStates { Idle, Chase }
+public enum EnemyStates { Idle, CombatMovement }
 
 public class EnemyController : MonoBehaviour
 {
@@ -23,7 +23,7 @@ public class EnemyController : MonoBehaviour
         NavAgent = GetComponent<NavMeshAgent>();
         stateDict = new Dictionary<EnemyStates, State<EnemyController>>();
         stateDict[EnemyStates.Idle] = GetComponent<IdleState>();
-        stateDict[EnemyStates.Chase] = GetComponent<ChaseState>();
+        stateDict[EnemyStates.CombatMovement] = GetComponent<CombatMovementState>();
 
         StateMachine = new StateMachine<EnemyController>(this);
         StateMachine.ChangeState(stateDict[EnemyStates.Idle]);
@@ -37,5 +37,6 @@ public class EnemyController : MonoBehaviour
     private void Update()
     {
         StateMachine.Execute();
+        Animator.SetFloat("moveAmount", NavAgent.velocity.magnitude / NavAgent.speed);
     }
 }
