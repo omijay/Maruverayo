@@ -5,8 +5,13 @@ using UnityEngine;
 public enum AICombatStates { Idle,Chase,Circling}
 public class CombatMovementState : State<EnemyController>
 {
+    [SerializeField] float ciclingSpeed = 20f;
     [SerializeField] float distanceToStand = 1.5f;
-    [SerializeField] float adjustDistanceThreshold = 1.0f;
+    [SerializeField] float adjustDistanceThreshold = 1f;
+    [SerializeField] Vector2 idleTimeRange = new Vector2 (2, 5);
+    [SerializeField] Vector2 circlingTimeRange = new Vector2 (3, 6);
+    float timer = 0f;
+    int circlingDir = 1;
 
     AICombatStates state;
     EnemyController enemy;
@@ -18,11 +23,23 @@ public class CombatMovementState : State<EnemyController>
 
     public override void Execute()
     {
-        if (Vector3.Distance(enemy.Target.transform.position, enemy.transform.position) > distanceToStand+ adjustDistanceThreshold)
+        if (Vector3.Distance(enemy.Target.transform.position, enemy.transform.position) > distanceToStand + adjustDistanceThreshold)
+        {
             StartChase();
-
+        }
         if (state == AICombatStates.Idle)
         {
+            if (timer <= 0)
+            {
+                if (Random.Range(0, 2) == 0)
+                {
+                    StartIdle();
+                }
+                else
+                {
+                    StartCircling();
+                }
+            }
 
         }
         else if (state == AICombatStates.Chase)
@@ -37,7 +54,16 @@ public class CombatMovementState : State<EnemyController>
         }
         else if (state == AICombatStates.Circling)
         {
+            if (timer <= 0)
+            {
+                StartIdle();
+                return;
+            }
+
+            transform.RotateAround(enemy.Target.transform.position, Vector3.up, ciclingSpeed * circlingDir * Time.deltaTime);
         }
+        if (timer > 0f)
+            timer -= Time.deltaTime; 
     }
 
 
@@ -45,11 +71,25 @@ public class CombatMovementState : State<EnemyController>
     {
         state = AICombatStates.Chase;
         enemy.Animator.SetBool("CombatMode", false);
+        enemy.Animator.SetBool("cricling", false);
+
     }
     void StartIdle()
     {
         state= AICombatStates.Idle;
+        timer = Random.Range(idleTimeRange.x, idleTimeRange.y);
         enemy.Animator.SetBool("CombatMode", true);
+        enemy.Animator.SetBool("cricling", false);
+
+    }
+    void StartCircling()
+    {
+        state = AICombatStates.Circling;
+        timer = Random.Range(circlingTimeRange.x, circlingTimeRange.y);
+
+        circlingDir = Random.Range(0, 2) == 0 ? 1 : -1;
+        enemy.Animator.SetBool("cricling", true);
+        enemy.Animator.SetFloat("criclingDir", circlingDir);
     }
 
     public override void Exit()
