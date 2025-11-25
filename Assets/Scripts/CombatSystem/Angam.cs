@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Attackstate{Idle,Windup,Impact,Cooldown}
+public enum Attackstates {Idle,Windup,Impact,Cooldown}
 
 public class Angam : MonoBehaviour
 
@@ -33,7 +33,7 @@ public class Angam : MonoBehaviour
             DisableAllColliders();
         }
     }
-    Attackstate attackstate;
+    public Attackstates Attackstate {  get; private set; }
     bool doCombo;
     int comboCount = 0;
     public bool InAction { get; private set; } = false;
@@ -45,7 +45,7 @@ public class Angam : MonoBehaviour
            StartCoroutine(Attack());
 
         }
-        else if (attackstate == Attackstate.Impact || attackstate == Attackstate.Cooldown)
+        else if (Attackstate == Attackstates.Impact || Attackstate == Attackstates.Cooldown)
         {
             doCombo = true;
         }
@@ -53,7 +53,7 @@ public class Angam : MonoBehaviour
     IEnumerator Attack()
     {
         InAction = true;
-        attackstate = Attackstate.Windup;
+        Attackstate = Attackstates.Windup;
 
 
         animator.CrossFade(attacks[comboCount].AnimName, 0.2f);
@@ -67,23 +67,23 @@ public class Angam : MonoBehaviour
             timer += Time.deltaTime;
             float normalizedTime= timer/animState.length;
 
-            if (attackstate == Attackstate.Windup) 
+            if (Attackstate == Attackstates.Windup) 
             {
                 if (normalizedTime >= attacks[comboCount].ImpactStartTime) 
                 { 
-                  attackstate = Attackstate.Impact;
+                  Attackstate = Attackstates.Impact;
                   EnableHitBox(attacks[comboCount]);
                 }
             }
-            else if (attackstate == Attackstate.Impact)
+            else if (Attackstate == Attackstates.Impact)
             {
                 if (normalizedTime >=attacks[comboCount].ImpactEndTime)
                 {
-                    attackstate = Attackstate.Cooldown;
+                    Attackstate = Attackstates.Cooldown;
                    DisableAllColliders();
                 }
             }
-            else if (attackstate == Attackstate.Cooldown)
+            else if (Attackstate == Attackstates.Cooldown)
             {
                 if (doCombo) 
                 {
@@ -98,7 +98,7 @@ public class Angam : MonoBehaviour
             yield return null;
         }
 
-        attackstate = Attackstate.Idle;
+        Attackstate = Attackstates.Idle;
         comboCount = 0;
         InAction = false;
     }
@@ -143,10 +143,14 @@ public class Angam : MonoBehaviour
     }
     void DisableAllColliders()
     {
-        leftHandCollider.enabled = false;
-        rightHandCollider.enabled = false;
-        rightFootCollider.enabled = false;
-        leftFootCollider.enabled = false;
+        if (leftHandCollider != null) 
+         leftHandCollider.enabled = false;
+        if (rightHandCollider != null)
+         rightHandCollider.enabled = false;
+        if (rightFootCollider  != null) 
+          rightFootCollider.enabled = false;
+        if (leftFootCollider  != null) 
+         leftFootCollider.enabled = false;
 
     }
 }

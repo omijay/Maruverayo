@@ -19,6 +19,7 @@ public class CombatMovementState : State<EnemyController>
     {
         enemy = owner;
         enemy.NavAgent.stoppingDistance = distanceToStand;
+        enemy.CombatMovementTimer = 0f;
     }
 
     public override void Execute()
@@ -64,6 +65,7 @@ public class CombatMovementState : State<EnemyController>
         }
         if (timer > 0f)
             timer -= Time.deltaTime; 
+     enemy.CombatMovementTimer = Time.deltaTime;
     }
 
 
@@ -94,6 +96,6 @@ public class CombatMovementState : State<EnemyController>
 
     public override void Exit()
     {
-
+      enemy.CombatMovementTimer = 0f;
     }
 }
