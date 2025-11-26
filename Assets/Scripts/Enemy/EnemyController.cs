@@ -43,9 +43,22 @@ public class EnemyController : MonoBehaviour
         return StateMachine.CurrentState == stateDict[state];
     }
 
+    Vector3 prevPos;
     private void Update()
     {
         StateMachine.Execute();
-        Animator.SetFloat("moveAmount", NavAgent.velocity.magnitude / NavAgent.speed);
+
+        // v = dx / dt
+        var deltaPos = transform.position - prevPos;
+        var velocity = deltaPos / Time.deltaTime;
+
+        float forwardSpeed = Vector3.Dot(velocity, transform.forward);
+        Animator.SetFloat("forwardSpeed", forwardSpeed / NavAgent.speed, 0.2f, Time.deltaTime);
+
+        float angle = Vector3.SignedAngle(transform.forward, velocity, Vector3.up);
+        float strafeSpeed = Mathf.Sin(angle * Mathf.Deg2Rad);
+        Animator.SetFloat("strafeSpeed", strafeSpeed, 0.2f, Time.deltaTime);
+
+        prevPos = transform.position;
     }
 }

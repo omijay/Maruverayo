@@ -37,7 +37,10 @@ public class map2PlayerController : MonoBehaviour
     private void Update()
     {
         if (angam.InAction)
+        {
+            animator.SetFloat("forwardSpeed", 0f);
             return;
+        }
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
@@ -64,7 +67,7 @@ public class map2PlayerController : MonoBehaviour
             targetRotation = Quaternion.LookRotation(moveDir);
         }
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        animator.SetFloat("moveAmount", moveAmount, 0.2f, Time.deltaTime);
+        animator.SetFloat("forwardSpeed", moveAmount, 0.2f, Time.deltaTime);
     }
     void GroundCheck()
     {
