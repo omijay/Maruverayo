@@ -39,6 +39,7 @@ public class map2PlayerController : MonoBehaviour
         if (angam.InAction)
         {
             animator.SetFloat("forwardSpeed", 0f);
+            //animator.SetFloat("forwardSpeed", 0f);
             return;
         }
         float h = Input.GetAxis("Horizontal");
