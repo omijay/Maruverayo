@@ -8155,6 +8155,7 @@ MonoBehaviour:
   rightHand: {fileID: 2715566404033798325}
   attacks:
   - {fileID: 11400000, guid: 4893b496d108a9a42809c91c24ebb78a, type: 2}
+  - {fileID: 11400000, guid: 6d8ac99b8e7b0cf4fb08469c96d14d6b, type: 2}
 --- !u!143 &5866666020032081960
 CharacterController:
   m_ObjectHideFlags: 0

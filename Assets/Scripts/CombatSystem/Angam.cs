@@ -153,4 +153,5 @@ public class Angam : MonoBehaviour
          leftFootCollider.enabled = false;
 
     }
+    public List<AttackData> Attacks => attacks;
 }
