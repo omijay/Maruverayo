@@ -6,6 +6,11 @@ public class VisionSensor : MonoBehaviour
 {
     [SerializeField] EnemyController enemy;
 
+    public void Awake()
+    {
+        enemy.VisionSensor = this;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         var fighter = other.GetComponent<Angam>();

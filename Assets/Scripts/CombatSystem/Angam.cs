@@ -37,6 +37,7 @@ public class Angam : MonoBehaviour
     bool doCombo;
     int comboCount = 0;
     public bool InAction { get; private set; } = false;
+    public bool InCounter { get; set; } = false;
 
     public void TryToAttack()
     {
@@ -69,6 +70,7 @@ public class Angam : MonoBehaviour
 
             if (Attackstate == Attackstates.Windup) 
             {
+                if (InCounter) break;
                 if (normalizedTime >= attacks[comboCount].ImpactStartTime) 
                 { 
                   Attackstate = Attackstates.Impact;
@@ -121,6 +123,36 @@ public class Angam : MonoBehaviour
         yield return new WaitForSeconds(animState.length * 0.8f);
         InAction = false;
     }
+   public IEnumerator PerformCounterAttack(EnemyController opponent)
+    {
+        InAction = true;
+        var dispVec = opponent.transform.position - transform.position;
+        dispVec.y = 0f;
+        transform.rotation = Quaternion.LookRotation(dispVec);
+        opponent.transform.rotation = Quaternion.LookRotation(-dispVec);
+
+        var targetPos = opponent.transform.position - dispVec.normalized * 1f;
+        animator.CrossFade("CounterAttack", 0.2f);
+        opponent.Animator.CrossFade("CounterAttackVictim", 0.2f);
+        opponent.ChangeState(EnemyStates.Dead);
+        yield return null;
+
+        var animState = animator.GetNextAnimatorStateInfo(1);
+        float timer = 0f;
+        while (timer <= animState.length)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, 5 * Time.deltaTime);
+
+            yield return null;
+
+            timer += Time.deltaTime;
+        }
+
+        InCounter = false;
+        opponent.Fighter.InCounter = false;
+
+        InAction = false;
+    }
     void EnableHitBox(AttackData attack)
     {
         switch (attack.HitboxToUse)
@@ -154,4 +186,6 @@ public class Angam : MonoBehaviour
 
     }
     public List<AttackData> Attacks => attacks;
+
+    public bool IsCounterable => Attackstate == Attackstates.Windup && comboCount == 0; 
 }
