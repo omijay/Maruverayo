@@ -19,12 +19,15 @@ public class EnemyController : MonoBehaviour
     public CharacterController CharacterController { get; private set; }
     public Animator Animator { get; private set; }
     public Angam Fighter { get; private set; }
+    public SkinnedMeshHighlighter MeshHighlighter { get; private set; }
     public VisionSensor VisionSensor { get; set; }
 
     private void Start()
     {
         Animator = GetComponent<Animator>();
         Fighter = GetComponent<Angam>();
+        MeshHighlighter = GetComponent<SkinnedMeshHighlighter>();
+
         NavAgent = GetComponent<NavMeshAgent>();
         CharacterController = GetComponent<CharacterController>();
         stateDict = new Dictionary<EnemyStates, State<EnemyController>>();

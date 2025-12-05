@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class CombatController : MonoBehaviour
 {
+    public EnemyController targetEnemy;
     Angam angam;
     Animator animator;
+    CameraController cam;
 
     private void Awake()
     {
         angam = GetComponent<Angam>();
         animator = GetComponent<Animator>();
+        cam = Camera.main.GetComponent<CameraController>();
     }
     void Start()
     {
@@ -38,5 +41,11 @@ public class CombatController : MonoBehaviour
         if (!angam.InCounter) 
            transform.position += animator.deltaPosition;
         transform.rotation *= animator.deltaRotation;
+    }
+    public Vector3 GetTargetingDir()
+    {
+        var vecFromCam = transform.position - cam.transform.position;
+        vecFromCam.y = 0f;
+        return vecFromCam.normalized;
     }
 }

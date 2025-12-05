@@ -6,6 +6,7 @@ using UnityEngine;
 public class EnemyManager : MonoBehaviour
 {
     [SerializeField] Vector2 timeRangeBetweenAttacks = new Vector2(1, 4);
+    [SerializeField] CombatController player;
 
     public static EnemyManager i { get; private set; }
     private void Awake()
@@ -26,6 +27,7 @@ public class EnemyManager : MonoBehaviour
     {
         enemiesInRange.Remove(enemy);
     }
+    float timer = 0;
     private void Update()
     {
         if (enemiesInRange.Count == 0)  return; 
@@ -38,18 +40,61 @@ public class EnemyManager : MonoBehaviour
             {
                 // Attack the player
                 var attackingEnemy = SelectEnemyForAttack();
-                attackingEnemy.ChangeState(EnemyStates.Attack);
-                notAttackingTimer = Random.Range(timeRangeBetweenAttacks.x, timeRangeBetweenAttacks.y);
+
+                if (attackingEnemy != null)
+                {
+                    attackingEnemy.ChangeState(EnemyStates.Attack);
+                    notAttackingTimer = Random.Range(timeRangeBetweenAttacks.x, timeRangeBetweenAttacks.y);
+                }
             }
         }
+        if (timer >= 0.1f)
+        {
+            timer = 0f;
+            var closestEnemy = GetClosesEnemyToPlayerDir();
+            if (closestEnemy != null && closestEnemy != player.targetEnemy)
+            {
+                var prevEnemy = player.targetEnemy;
+                player.targetEnemy = closestEnemy;
+
+                player?.targetEnemy?.MeshHighlighter.HighlightMesh(true);
+                prevEnemy?.MeshHighlighter?.HighlightMesh(false);
+            }
+        }
+        timer += Time.deltaTime;
     }
 
     EnemyController SelectEnemyForAttack()
     {
-        return enemiesInRange.OrderByDescending(e => e.CombatMovementTimer).FirstOrDefault();
+        return enemiesInRange.OrderByDescending(e => e.CombatMovementTimer).FirstOrDefault(e => e.Target != null);
     }
     public EnemyController GetAttackingEnemy()
     {
         return enemiesInRange.FirstOrDefault(e => e.IsInState(EnemyStates.Attack));
+    }
+    public EnemyController GetClosesEnemyToPlayerDir()
+    {
+        var targetingDir = player.GetTargetingDir();
+
+        float minDistance = Mathf.Infinity;
+        EnemyController closestEnemy = null;
+
+        foreach (var enemy in enemiesInRange)
+        {
+            var vecToEnemy = enemy.transform.position - player.transform.position;
+            vecToEnemy.y = 0;
+
+            // Distance to the targetingDir line will be v * sin(theta)
+            float angle = Vector3.Angle(targetingDir, vecToEnemy);
+            float distance = vecToEnemy.magnitude * Mathf.Sin(angle * Mathf.Deg2Rad);
+
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closestEnemy = enemy;
+            }
+        }
+
+        return closestEnemy;
     }
 }
