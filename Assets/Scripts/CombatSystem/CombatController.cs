@@ -4,7 +4,35 @@ using UnityEngine;
 
 public class CombatController : MonoBehaviour
 {
-    public EnemyController targetEnemy;
+    
+    EnemyController targetEnemy;
+    public EnemyController TargetEnemy
+    {
+        get => targetEnemy;
+        set
+        {
+            targetEnemy = value;
+
+            if (targetEnemy == null)
+                CombatMode = false;
+        }
+    }
+
+    bool combatMode;
+    public bool CombatMode
+    {
+        get => combatMode;
+        set
+        {
+            combatMode = value;
+
+            if (TargetEnemy == null)
+                combatMode = false;
+
+            animator.SetBool("CombatMode", combatMode);
+        }
+    }
+
     Angam angam;
     Animator animator;
     CameraController cam;
@@ -33,7 +61,12 @@ public class CombatController : MonoBehaviour
             else
             {
                 angam.TryToAttack();
+                CombatMode = true;
             }
+        }
+        if (Input.GetButtonDown("LockOn"))
+        {
+            CombatMode = !CombatMode;
         }
     }
     private void OnAnimatorMove()

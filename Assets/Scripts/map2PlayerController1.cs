@@ -21,12 +21,14 @@ public class map2PlayerController : MonoBehaviour
     Animator animator;
     CharacterController characterController;
     Angam angam;
+    CombatController combbatController;
     private void Awake()
     {
         cameraController = Camera.main.GetComponent<CameraController>();
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         angam = GetComponent<Angam>();
+        combbatController = GetComponent<CombatController>();
     }
     void Start()
     {
@@ -61,15 +63,42 @@ public class map2PlayerController : MonoBehaviour
         }
 
         var velocity = moveDir * moveSpeed;
-        velocity.y = ySpeed;
 
-        if (moveAmount > 0) 
+        if (combbatController.CombatMode)
         {
-            characterController.Move(moveDir * moveSpeed * Time.deltaTime);
-            targetRotation = Quaternion.LookRotation(moveDir);
+            velocity /= 4f;
+
+            // Rotate and face the target enemy
+            var targetVec = combbatController.TargetEnemy.transform.position - transform.position;
+            targetVec.y = 0;
+
+            if (moveAmount > 0)
+            {
+                targetRotation = Quaternion.LookRotation(targetVec);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            }
+
+            // Split the velocity into it's forward and sideward component and set it into the forwardSpeed
+            float forwardSpeed = Vector3.Dot(velocity, transform.forward);
+            animator.SetFloat("forwardSpeed", forwardSpeed / moveSpeed, 0.2f, Time.deltaTime);
+
+            float angle = Vector3.SignedAngle(transform.forward, velocity, Vector3.up);
+            float strafeSpeed = Mathf.Sin(angle * Mathf.Deg2Rad);
+            animator.SetFloat("strafeSpeed", strafeSpeed, 0.2f, Time.deltaTime);
         }
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        animator.SetFloat("forwardSpeed", moveAmount, 0.2f, Time.deltaTime);
+        else {
+
+            if (moveAmount > 0)
+            {
+                characterController.Move(moveDir * moveSpeed * Time.deltaTime);
+                targetRotation = Quaternion.LookRotation(moveDir);
+            }
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            animator.SetFloat("forwardSpeed", moveAmount, 0.2f, Time.deltaTime);
+        }
+
+        velocity.y = ySpeed;
+        characterController.Move(velocity * Time.deltaTime);
     }
     void GroundCheck()
     {

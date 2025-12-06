@@ -26,6 +26,12 @@ public class EnemyManager : MonoBehaviour
     public void RemoveEnemyInRange(EnemyController enemy)
     {
         enemiesInRange.Remove(enemy);
+        if (enemy == player.TargetEnemy)
+        {
+            enemy.MeshHighlighter?.HighlightMesh(false);
+            player.TargetEnemy = GetClosesEnemyToPlayerDir();
+            player.TargetEnemy?.MeshHighlighter?.HighlightMesh(true);
+        }
     }
     float timer = 0;
     private void Update()
@@ -52,12 +58,12 @@ public class EnemyManager : MonoBehaviour
         {
             timer = 0f;
             var closestEnemy = GetClosesEnemyToPlayerDir();
-            if (closestEnemy != null && closestEnemy != player.targetEnemy)
+            if (closestEnemy != null && closestEnemy != player.TargetEnemy)
             {
-                var prevEnemy = player.targetEnemy;
-                player.targetEnemy = closestEnemy;
+                var prevEnemy = player.TargetEnemy;
+                player.TargetEnemy = closestEnemy;
 
-                player?.targetEnemy?.MeshHighlighter.HighlightMesh(true);
+                player?.TargetEnemy?.MeshHighlighter.HighlightMesh(true);
                 prevEnemy?.MeshHighlighter?.HighlightMesh(false);
             }
         }
