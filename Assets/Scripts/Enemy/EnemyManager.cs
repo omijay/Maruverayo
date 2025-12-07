@@ -72,7 +72,7 @@ public class EnemyManager : MonoBehaviour
 
     EnemyController SelectEnemyForAttack()
     {
-        return enemiesInRange.OrderByDescending(e => e.CombatMovementTimer).FirstOrDefault(e => e.Target != null);
+        return enemiesInRange.OrderByDescending(e => e.CombatMovementTimer).FirstOrDefault(e => e.Target != null && e.IsInState(EnemyStates.CombatMovement));
     }
     public EnemyController GetAttackingEnemy()
     {

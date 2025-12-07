@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum EnemyStates { Idle, CombatMovement, Attack, RetreatAfterAttack, Dead }
+public enum EnemyStates { Idle, CombatMovement, Attack, RetreatAfterAttack, Dead, GettingHit }
 
 public class EnemyController : MonoBehaviour
 {
@@ -36,9 +36,11 @@ public class EnemyController : MonoBehaviour
         stateDict[EnemyStates.Attack] = GetComponent<AttackState>();
         stateDict[EnemyStates.RetreatAfterAttack] = GetComponent<RetreatAfterAttackState>();
         stateDict[EnemyStates.Dead] = GetComponent<DeadState>();
+        stateDict[EnemyStates.GettingHit] = GetComponent<GettingHitState>();
 
         StateMachine = new StateMachine<EnemyController>(this);
         StateMachine.ChangeState(stateDict[EnemyStates.Idle]);
+        Fighter.OnGotHit += () => ChangeState(EnemyStates.GettingHit);
     }
 
     public void ChangeState(EnemyStates state)
@@ -69,5 +71,20 @@ public class EnemyController : MonoBehaviour
         Animator.SetFloat("strafeSpeed", strafeSpeed, 0.2f, Time.deltaTime);
 
         prevPos = transform.position;
+    }
+    public Angam FindTarget() 
+    {
+        foreach (var target in TargetsInRange)
+        {
+            var vecToTarget = target.transform.position - transform.position;
+            float angle = Vector3.Angle(transform.forward, vecToTarget);
+
+            if (angle <= Fov / 2)
+            {
+                return target;
+              
+            }
+        }
+        return null;
     }
 }

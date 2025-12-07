@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,8 @@ public class Angam : MonoBehaviour
     [SerializeField] List<AttackData> attacks;
 
     [SerializeField] float rotationSpeed = 500f;
+    public event Action OnGotHit; 
+    public event Action OnHitComplete; 
 
  
     SphereCollider leftHandCollider, rightHandCollider, leftFootCollider, rightFootCollider;
@@ -126,12 +129,16 @@ public class Angam : MonoBehaviour
         dispVec.y = 0f;
         transform.rotation = Quaternion.LookRotation(dispVec);
 
+        OnGotHit?.Invoke();
+
 
         animator.CrossFade("Damage_Front_Small_ver_C", 0.2f);
         yield return null;
 
         var animState = animator.GetNextAnimatorStateInfo(1);
         yield return new WaitForSeconds(animState.length * 0.8f);
+
+        OnHitComplete?.Invoke();
         InAction = false;
     }
    public IEnumerator PerformCounterAttack(EnemyController opponent)
