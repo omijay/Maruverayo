@@ -1736,7 +1736,7 @@ MonoBehaviour:
   - {fileID: 390043549}
   originalMaterial: {fileID: 1106563633393636324, guid: eee29b9f0273f674899c8d876c61ea31,
     type: 3}
-  highlightedMaterial: {fileID: 2100000, guid: 961ebd27b77fd76418141de6f3e0c197, type: 2}
+  highlightedMaterial: {fileID: 0}
 --- !u!114 &453220895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8339,7 +8339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22dded1abbc4b2142b4dabc61b0c1a77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackDistance: 1
+  attackDistance: 0.69
 --- !u!114 &5866666020032081966
 MonoBehaviour:
   m_ObjectHideFlags: 0

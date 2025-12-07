@@ -17,11 +17,14 @@ public class map2PlayerController : MonoBehaviour
     float ySpeed;
 
     Quaternion targetRotation;
+    public Vector3 InputDir { get; private set; }
+
     CameraController cameraController;
     Animator animator;
     CharacterController characterController;
     Angam angam;
     CombatController combbatController;
+    public static map2PlayerController i { get; private set; } 
     private void Awake()
     {
         cameraController = Camera.main.GetComponent<CameraController>();
@@ -29,6 +32,8 @@ public class map2PlayerController : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         angam = GetComponent<Angam>();
         combbatController = GetComponent<CombatController>();
+
+        i = this; 
     }
     void Start()
     {
@@ -51,6 +56,8 @@ public class map2PlayerController : MonoBehaviour
         float moveAmount = Mathf.Clamp01(Mathf.Abs(h) + Mathf.Abs(v));
         var moveInput = (new Vector3(h, 0, v)).normalized;
         var moveDir = cameraController.planerRotation * moveInput;
+
+        InputDir = moveDir;
 
         GroundCheck();
         if (isGrounded)

@@ -29,7 +29,7 @@ public class EnemyManager : MonoBehaviour
         if (enemy == player.TargetEnemy)
         {
             enemy.MeshHighlighter?.HighlightMesh(false);
-            player.TargetEnemy = GetClosesEnemyToPlayerDir();
+            player.TargetEnemy = GetClosesEnemyToDirection(player.GetTargetingDir());
             player.TargetEnemy?.MeshHighlighter?.HighlightMesh(true);
         }
     }
@@ -57,7 +57,7 @@ public class EnemyManager : MonoBehaviour
         if (timer >= 0.1f)
         {
             timer = 0f;
-            var closestEnemy = GetClosesEnemyToPlayerDir();
+            var closestEnemy = GetClosesEnemyToDirection(player.GetTargetingDir());
             if (closestEnemy != null && closestEnemy != player.TargetEnemy)
             {
                 var prevEnemy = player.TargetEnemy;
@@ -78,10 +78,8 @@ public class EnemyManager : MonoBehaviour
     {
         return enemiesInRange.FirstOrDefault(e => e.IsInState(EnemyStates.Attack));
     }
-    public EnemyController GetClosesEnemyToPlayerDir()
+    public EnemyController GetClosesEnemyToDirection(Vector3 direction)
     {
-        var targetingDir = player.GetTargetingDir();
-
         float minDistance = Mathf.Infinity;
         EnemyController closestEnemy = null;
 
@@ -91,7 +89,7 @@ public class EnemyManager : MonoBehaviour
             vecToEnemy.y = 0;
 
             // Distance to the targetingDir line will be v * sin(theta)
-            float angle = Vector3.Angle(targetingDir, vecToEnemy);
+            float angle = Vector3.Angle(direction, vecToEnemy);
             float distance = vecToEnemy.magnitude * Mathf.Sin(angle * Mathf.Deg2Rad);
 
             if (distance < minDistance)

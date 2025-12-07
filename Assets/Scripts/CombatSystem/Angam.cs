@@ -11,6 +11,8 @@ public class Angam : MonoBehaviour
     [SerializeField] GameObject rightHand;
     [SerializeField] List<AttackData> attacks;
 
+    [SerializeField] float rotationSpeed = 500f;
+
  
     SphereCollider leftHandCollider, rightHandCollider, leftFootCollider, rightFootCollider;
 
@@ -39,11 +41,11 @@ public class Angam : MonoBehaviour
     public bool InAction { get; private set; } = false;
     public bool InCounter { get; set; } = false;
 
-    public void TryToAttack()
+    public void TryToAttack(Vector3? attackDir = null)
     {
         if (!InAction)
         {
-           StartCoroutine(Attack());
+           StartCoroutine(Attack(attackDir));
 
         }
         else if (Attackstate == Attackstates.Impact || Attackstate == Attackstates.Cooldown)
@@ -51,7 +53,7 @@ public class Angam : MonoBehaviour
             doCombo = true;
         }
     }
-    IEnumerator Attack()
+    IEnumerator Attack(Vector3? attackDir = null)
     {
         InAction = true;
         Attackstate = Attackstates.Windup;
@@ -67,6 +69,10 @@ public class Angam : MonoBehaviour
         {
             timer += Time.deltaTime;
             float normalizedTime= timer/animState.length;
+            if (attackDir != null)
+            {
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(attackDir.Value), rotationSpeed * Time.deltaTime);
+            }
 
             if (Attackstate == Attackstates.Windup) 
             {
@@ -108,14 +114,19 @@ public class Angam : MonoBehaviour
     {
         if (other.tag == "Hitbox" && !InAction) 
         {
-            StartCoroutine(PlayHitReaction());
+            StartCoroutine(PlayHitReaction(other.GetComponentInParent<Angam>().transform));
 
         }
             
     }
-    IEnumerator PlayHitReaction()
+    IEnumerator PlayHitReaction(Transform attacker)
     {
         InAction = true;
+        var dispVec = attacker.position - transform.position;
+        dispVec.y = 0f;
+        transform.rotation = Quaternion.LookRotation(dispVec);
+
+
         animator.CrossFade("Damage_Front_Small_ver_C", 0.2f);
         yield return null;
 

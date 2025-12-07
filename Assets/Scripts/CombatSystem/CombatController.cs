@@ -60,7 +60,12 @@ public class CombatController : MonoBehaviour
             }
             else
             {
-                angam.TryToAttack();
+                var enemyToAttack = EnemyManager.i.GetClosesEnemyToDirection(map2PlayerController.i.InputDir);
+                Vector3? dirToAttack = null;
+                if (enemyToAttack != null)
+                    dirToAttack = enemyToAttack.transform.position - transform.position;
+
+                angam.TryToAttack(dirToAttack);
                 CombatMode = true;
             }
         }
@@ -77,8 +82,16 @@ public class CombatController : MonoBehaviour
     }
     public Vector3 GetTargetingDir()
     {
-        var vecFromCam = transform.position - cam.transform.position;
-        vecFromCam.y = 0f;
-        return vecFromCam.normalized;
+        if (!combatMode)
+        {
+            var vecFromCam = transform.position - cam.transform.position;
+            vecFromCam.y = 0f;
+            return vecFromCam.normalized;
+        }
+        else
+        {
+            return transform.forward;
+        }
     }
+
 }
