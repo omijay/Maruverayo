@@ -10,5 +10,10 @@ public class AttackData : ScriptableObject
     [field: SerializeField] public AttackHitbox HitboxToUse {  get; private set; }
     [field: SerializeField] public float ImpactStartTime {  get; private set; }
     [field: SerializeField] public float ImpactEndTime {  get; private set; }
+
+
+    [field: SerializeField] public bool MoveToTarget {  get; private set; }
+    [field: SerializeField] public float DistanceFromTarget { get; private set; } = 1f;
+    [field: SerializeField] public float MaxMoveDistance { get; private set; } = 3f;
 }
 public enum AttackHitbox {LeftHand,RightHand,LeftFoot,RightFoot,Sword}

@@ -11,6 +11,8 @@ public class Angam : MonoBehaviour
     [SerializeField] GameObject leftHand;
     [SerializeField] GameObject rightHand;
     [SerializeField] List<AttackData> attacks;
+    [SerializeField] List<AttackData> longRangeAttacks;
+    [SerializeField] float longRangeAttackThreshold = 1.5f;
 
     [SerializeField] float rotationSpeed = 500f;
     public event Action OnGotHit; 
@@ -44,11 +46,11 @@ public class Angam : MonoBehaviour
     public bool InAction { get; private set; } = false;
     public bool InCounter { get; set; } = false;
 
-    public void TryToAttack(Vector3? attackDir = null)
+    public void TryToAttack(Angam target = null)
     {
         if (!InAction)
         {
-           StartCoroutine(Attack(attackDir));
+           StartCoroutine(Attack(target));
 
         }
         else if (Attackstate == Attackstates.Impact || Attackstate == Attackstates.Cooldown)
@@ -56,13 +58,36 @@ public class Angam : MonoBehaviour
             doCombo = true;
         }
     }
-    IEnumerator Attack(Vector3? attackDir = null)
+    IEnumerator Attack(Angam target = null)
     {
         InAction = true;
         Attackstate = Attackstates.Windup;
+        var attack = attacks[comboCount];
 
+        var attackDir = transform.forward;
+        Vector3 startPos = transform.position;
+        Vector3 targetPos = Vector3.zero;
+        if (target != null)
+        {
+            var vecToTarget = target.transform.position - transform.position;
+            vecToTarget.y = 0;
+            attackDir = vecToTarget.normalized;
+            float distance = vecToTarget.magnitude - attack.DistanceFromTarget;
 
-        animator.CrossFade(attacks[comboCount].AnimName, 0.2f);
+            if (distance > longRangeAttackThreshold)
+            {
+                attack = longRangeAttacks[0];
+            }
+            if (attack.MoveToTarget)
+            {
+                if (distance <= attack.MaxMoveDistance)
+                    targetPos = target.transform.position - attackDir * attack.DistanceFromTarget;
+                else
+                    targetPos = startPos + attackDir * attack.MaxMoveDistance;
+            }
+        }
+
+        animator.CrossFade(attack.AnimName, 0.2f);
         yield return null;
 
         var animState = animator.GetNextAnimatorStateInfo(1);
@@ -72,23 +97,30 @@ public class Angam : MonoBehaviour
         {
             timer += Time.deltaTime;
             float normalizedTime= timer/animState.length;
+
+            // Move the attacker towards the target while performing attack
+            if (target != null && attack.MoveToTarget)
+            {
+                transform.position = Vector3.Lerp(startPos, targetPos, normalizedTime);
+            }
+
             if (attackDir != null)
             {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(attackDir.Value), rotationSpeed * Time.deltaTime);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(attackDir), rotationSpeed * Time.deltaTime);
             }
 
             if (Attackstate == Attackstates.Windup) 
             {
                 if (InCounter) break;
-                if (normalizedTime >= attacks[comboCount].ImpactStartTime) 
+                if (normalizedTime >= attack.ImpactStartTime) 
                 { 
                   Attackstate = Attackstates.Impact;
-                  EnableHitBox(attacks[comboCount]);
+                  EnableHitBox(attack);
                 }
             }
             else if (Attackstate == Attackstates.Impact)
             {
-                if (normalizedTime >=attacks[comboCount].ImpactEndTime)
+                if (normalizedTime >=attack.ImpactEndTime)
                 {
                     Attackstate = Attackstates.Cooldown;
                    DisableAllColliders();

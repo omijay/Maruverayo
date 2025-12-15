@@ -61,11 +61,9 @@ public class CombatController : MonoBehaviour
             else
             {
                 var enemyToAttack = EnemyManager.i.GetClosesEnemyToDirection(map2PlayerController.i.InputDir);
-                Vector3? dirToAttack = null;
-                if (enemyToAttack != null)
-                    dirToAttack = enemyToAttack.transform.position - transform.position;
+              
 
-                angam.TryToAttack(dirToAttack);
+                angam.TryToAttack(enemyToAttack.Fighter);
                 CombatMode = true;
             }
         }

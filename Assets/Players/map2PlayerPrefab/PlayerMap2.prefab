@@ -278,6 +278,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4893b496d108a9a42809c91c24ebb78a, type: 2}
   - {fileID: 11400000, guid: af3e2f6fbaf6269498be83fb2e68f1f2, type: 2}
   - {fileID: 11400000, guid: 6d8ac99b8e7b0cf4fb08469c96d14d6b, type: 2}
+  longRangeAttacks:
+  - {fileID: 11400000, guid: 5dc70467f9011594ca5dc9fdf0e17a0d, type: 2}
+  longRangeAttackThreshold: 1.5
+  rotationSpeed: 500
 --- !u!1 &990400982088137633
 GameObject:
   m_ObjectHideFlags: 0
