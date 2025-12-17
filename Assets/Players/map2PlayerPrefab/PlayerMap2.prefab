@@ -454,7 +454,7 @@ GameObject:
   - component: {fileID: 5492712826669562093}
   m_Layer: 0
   m_Name: mixamorig:LeftHandIndex4
-  m_TagString: Hitbox
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

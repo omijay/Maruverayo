@@ -589,11 +589,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2051699775358963192, guid: 528a046a53fcc194f88e99fbbc046fcd,
-        type: 3}
-      propertyPath: m_TagString
-      value: Untagged
-      objectReference: {fileID: 0}
     - target: {fileID: 7368422196031470849, guid: 528a046a53fcc194f88e99fbbc046fcd,
         type: 3}
       propertyPath: m_Name
@@ -2606,6 +2601,8 @@ MonoBehaviour:
   attacks:
   - {fileID: 11400000, guid: 4893b496d108a9a42809c91c24ebb78a, type: 2}
   - {fileID: 11400000, guid: 6d8ac99b8e7b0cf4fb08469c96d14d6b, type: 2}
+  longRangeAttacks: []
+  longRangeAttackThreshold: 1.5
   rotationSpeed: 500
 --- !u!143 &5866666020032081960
 CharacterController:

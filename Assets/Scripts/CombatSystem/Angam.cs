@@ -58,9 +58,11 @@ public class Angam : MonoBehaviour
             doCombo = true;
         }
     }
+    Angam currTarget;
     IEnumerator Attack(Angam target = null)
     {
         InAction = true;
+        currTarget = target;
         Attackstate = Attackstates.Windup;
         var attack = attacks[comboCount];
 
@@ -101,7 +103,9 @@ public class Angam : MonoBehaviour
             // Move the attacker towards the target while performing attack
             if (target != null && attack.MoveToTarget)
             {
-                transform.position = Vector3.Lerp(startPos, targetPos, normalizedTime);
+                float percTime = (normalizedTime - attack.MoveStartTime) / (attack.MoveEndTime - attack.MoveStartTime);
+                transform.position = Vector3.Lerp(startPos, targetPos, percTime);
+
             }
 
             if (attackDir != null)
@@ -133,7 +137,7 @@ public class Angam : MonoBehaviour
                     doCombo = false;
                     comboCount = (comboCount + 1) % attacks.Count;
 
-                    StartCoroutine(Attack());
+                    StartCoroutine(Attack(target));
                     yield break;
                 
                 }
@@ -144,12 +148,16 @@ public class Angam : MonoBehaviour
         Attackstate = Attackstates.Idle;
         comboCount = 0;
         InAction = false;
+        currTarget = null;
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Hitbox" && !InAction) 
         {
-            StartCoroutine(PlayHitReaction(other.GetComponentInParent<Angam>().transform));
+            var attacker = other.GetComponentInParent<Angam>();
+            if (attacker.currTarget != this)
+                return;
+            StartCoroutine(PlayHitReaction(attacker.transform));
 
         }
             
