@@ -111,6 +111,10 @@ public class map2PlayerController : MonoBehaviour
     {
        isGrounded = Physics.CheckSphere(transform.TransformPoint(groundCheckOffset), groundCheckRadius, groundLayer);
     }
+    public Vector3 GetIntentDirection()
+    {
+        return InputDir != Vector3.zero ? InputDir : transform.forward;
+    }
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(0, 1, 0, 0.5f);

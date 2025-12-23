@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: Long_Kicking
   m_EditorClassIdentifier: 
   <AnimName>k__BackingField: Long_Kicking
-  <HitboxToUse>k__BackingField: 3
+  <HitboxToUse>k__BackingField: 2
   <ImpactStartTime>k__BackingField: 0.31
   <ImpactEndTime>k__BackingField: 0.47
   <MoveToTarget>k__BackingField: 1
   <DistanceFromTarget>k__BackingField: 0.5
   <MaxMoveDistance>k__BackingField: 3
+  <MoveStartTime>k__BackingField: 0
+  <MoveEndTime>k__BackingField: 1

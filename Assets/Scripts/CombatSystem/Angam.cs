@@ -15,7 +15,9 @@ public class Angam : MonoBehaviour
     [SerializeField] float longRangeAttackThreshold = 1.5f;
 
     [SerializeField] float rotationSpeed = 500f;
-    public event Action OnGotHit; 
+
+    public bool IsTakingHit { get; private set; } = false;
+    public event Action<Angam> OnGotHit; 
     public event Action OnHitComplete; 
 
  
@@ -76,7 +78,7 @@ public class Angam : MonoBehaviour
             attackDir = vecToTarget.normalized;
             float distance = vecToTarget.magnitude - attack.DistanceFromTarget;
 
-            if (distance > longRangeAttackThreshold)
+            if (distance > longRangeAttackThreshold && longRangeAttacks.Count>0)
             {
                 attack = longRangeAttacks[0];
             }
@@ -97,6 +99,7 @@ public class Angam : MonoBehaviour
         float timer = 0f;
         while (timer <= animState.length)
         {
+            if (IsTakingHit) break;
             timer += Time.deltaTime;
             float normalizedTime= timer/animState.length;
 
@@ -152,24 +155,26 @@ public class Angam : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Hitbox" && !InAction) 
+        if (other.tag == "Hitbox" && !IsTakingHit && !InCounter) 
         {
             var attacker = other.GetComponentInParent<Angam>();
             if (attacker.currTarget != this)
                 return;
-            StartCoroutine(PlayHitReaction(attacker.transform));
+            StartCoroutine(PlayHitReaction(attacker));
 
         }
             
     }
-    IEnumerator PlayHitReaction(Transform attacker)
+    IEnumerator PlayHitReaction(Angam attacker)
     {
         InAction = true;
-        var dispVec = attacker.position - transform.position;
+        IsTakingHit = true;
+
+        var dispVec = attacker.transform.position - transform.position;
         dispVec.y = 0f;
         transform.rotation = Quaternion.LookRotation(dispVec);
 
-        OnGotHit?.Invoke();
+        OnGotHit?.Invoke(attacker);
 
 
         animator.CrossFade("Damage_Front_Small_ver_C", 0.2f);
@@ -180,6 +185,7 @@ public class Angam : MonoBehaviour
 
         OnHitComplete?.Invoke();
         InAction = false;
+        IsTakingHit = false;
     }
    public IEnumerator PerformCounterAttack(EnemyController opponent)
     {

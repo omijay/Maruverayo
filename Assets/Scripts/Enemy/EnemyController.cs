@@ -40,7 +40,7 @@ public class EnemyController : MonoBehaviour
 
         StateMachine = new StateMachine<EnemyController>(this);
         StateMachine.ChangeState(stateDict[EnemyStates.Idle]);
-        Fighter.OnGotHit += () => ChangeState(EnemyStates.GettingHit);
+        Fighter.OnGotHit += (Angam attacker) => ChangeState(EnemyStates.GettingHit);
     }
 
     public void ChangeState(EnemyStates state)

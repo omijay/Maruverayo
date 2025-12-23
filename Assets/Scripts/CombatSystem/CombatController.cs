@@ -43,15 +43,19 @@ public class CombatController : MonoBehaviour
         animator = GetComponent<Animator>();
         cam = Camera.main.GetComponent<CameraController>();
     }
-    void Start()
+    private void Start()
     {
-        
+        angam.OnGotHit += (Angam attacker) =>
+        {
+            if (CombatMode && attacker != TargetEnemy.Fighter)
+                TargetEnemy = attacker.GetComponent<EnemyController>();
+        };
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if (Input.GetButtonDown("Attack"))
+        if (Input.GetButtonDown("Attack") && !angam.IsTakingHit )
         {
             var enemy = EnemyManager.i.GetAttackingEnemy();
             if (enemy != null && enemy.Fighter.IsCounterable && !angam.InAction)
@@ -60,10 +64,10 @@ public class CombatController : MonoBehaviour
             }
             else
             {
-                var enemyToAttack = EnemyManager.i.GetClosesEnemyToDirection(map2PlayerController.i.InputDir);
+                var enemyToAttack = EnemyManager.i.GetClosesEnemyToDirection(map2PlayerController.i.GetIntentDirection());
               
 
-                angam.TryToAttack(enemyToAttack.Fighter);
+                angam.TryToAttack(enemyToAttack?.Fighter);
                 CombatMode = true;
             }
         }
