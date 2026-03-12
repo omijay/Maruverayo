@@ -43,7 +43,7 @@ public class map2PlayerController : MonoBehaviour
     
     private void Update()
     {
-        if (angam.InAction)
+        if (angam.InAction || angam.Health <= 0)
         {
             targetRotation = transform.rotation;
             animator.SetFloat("forwardSpeed", 0f);

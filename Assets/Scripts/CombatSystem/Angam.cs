@@ -8,6 +8,7 @@ public enum Attackstates {Idle,Windup,Impact,Cooldown}
 public class Angam : MonoBehaviour
 
 {
+    [field: SerializeField] public float Health { get; private set; } = 25f;
     [SerializeField] GameObject leftHand;
     [SerializeField] GameObject rightHand;
     [SerializeField] List<AttackData> attacks;
@@ -160,10 +161,22 @@ public class Angam : MonoBehaviour
             var attacker = other.GetComponentInParent<Angam>();
             if (attacker.currTarget != this)
                 return;
-            StartCoroutine(PlayHitReaction(attacker));
+
+            TakeDamage(5f);
+            OnGotHit?.Invoke(attacker);
+
+            if (Health > 0)
+                StartCoroutine(PlayHitReaction(attacker));
+            else
+                PlayDeathAnimation(attacker);
+
 
         }
             
+    }
+    void TakeDamage(float damage)
+    {
+        Health = Mathf.Clamp(Health - damage, 0, Health);
     }
     IEnumerator PlayHitReaction(Angam attacker)
     {
@@ -174,7 +187,6 @@ public class Angam : MonoBehaviour
         dispVec.y = 0f;
         transform.rotation = Quaternion.LookRotation(dispVec);
 
-        OnGotHit?.Invoke(attacker);
 
 
         animator.CrossFade("Damage_Front_Small_ver_C", 0.2f);
@@ -187,7 +199,12 @@ public class Angam : MonoBehaviour
         InAction = false;
         IsTakingHit = false;
     }
-   public IEnumerator PerformCounterAttack(EnemyController opponent)
+    void PlayDeathAnimation(Angam attacker)
+    {
+       
+        animator.CrossFade("FallBackDeath", 0.2f);
+    }
+    public IEnumerator PerformCounterAttack(EnemyController opponent)
     {
         InAction = true;
         var dispVec = opponent.transform.position - transform.position;

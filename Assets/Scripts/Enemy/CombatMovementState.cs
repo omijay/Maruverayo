@@ -36,6 +36,12 @@ public class CombatMovementState : State<EnemyController>
                 return;
             }
         }
+        if(enemy.Target.Health <= 0)
+        {
+            enemy.Target = null;
+            enemy.ChangeState(EnemyStates.Idle);
+            return;
+        }
 
         if (Vector3.Distance(enemy.Target.transform.position, enemy.transform.position) > distanceToStand + adjustDistanceThreshold)
         {

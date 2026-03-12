@@ -40,7 +40,13 @@ public class EnemyController : MonoBehaviour
 
         StateMachine = new StateMachine<EnemyController>(this);
         StateMachine.ChangeState(stateDict[EnemyStates.Idle]);
-        Fighter.OnGotHit += (Angam attacker) => ChangeState(EnemyStates.GettingHit);
+        Fighter.OnGotHit += (Angam attacker) =>
+        {
+            if (Fighter.Health > 0)
+                ChangeState(EnemyStates.GettingHit);
+            else
+                ChangeState(EnemyStates.Dead);
+        };
     }
 
     public void ChangeState(EnemyStates state)
@@ -69,6 +75,12 @@ public class EnemyController : MonoBehaviour
         float angle = Vector3.SignedAngle(transform.forward, velocity, Vector3.up);
         float strafeSpeed = Mathf.Sin(angle * Mathf.Deg2Rad);
         Animator.SetFloat("strafeSpeed", strafeSpeed, 0.2f, Time.deltaTime);
+
+        if(Target?.Health <= 0)
+        {
+            TargetsInRange.Remove(Target);
+            EnemyManager.i.RemoveEnemyInRange(this);
+        }
 
         prevPos = transform.position;
     }

@@ -17,6 +17,8 @@ public class GettingHitState : State<EnemyController>
     IEnumerator GoToCombatMovement()
     {
         yield return new WaitForSeconds(stunntime);
+
+        if(!enemy.IsInState(EnemyStates.Dead))
         enemy.ChangeState(EnemyStates.CombatMovement);
     }
 }
