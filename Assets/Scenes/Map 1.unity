@@ -589,6 +589,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3352812386127897833, guid: 528a046a53fcc194f88e99fbbc046fcd,
+        type: 3}
+      propertyPath: <Health>k__BackingField
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7368422196031470849, guid: 528a046a53fcc194f88e99fbbc046fcd,
         type: 3}
       propertyPath: m_Name
@@ -2596,6 +2601,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad18e9c81d5380c4fa25d3475a778ef2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Health>k__BackingField: 25
   leftHand: {fileID: 4494945601840465016}
   rightHand: {fileID: 2715566404033798325}
   attacks:

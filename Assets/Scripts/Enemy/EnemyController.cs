@@ -8,6 +8,7 @@ public enum EnemyStates { Idle, CombatMovement, Attack, RetreatAfterAttack, Dead
 public class EnemyController : MonoBehaviour
 {
     [field: SerializeField] public float Fov { get; private set; } = 180f;
+    [field: SerializeField] public float AlertRange { get; private set; } = 20f;
     public List<Angam> TargetsInRange { get; set; } = new List<Angam>();
 
     public Angam Target { get; set; }
@@ -42,8 +43,16 @@ public class EnemyController : MonoBehaviour
         StateMachine.ChangeState(stateDict[EnemyStates.Idle]);
         Fighter.OnGotHit += (Angam attacker) =>
         {
-            if (Fighter.Health > 0)
+            if (Fighter.Health > 0) 
+            { 
+                if(Target == null)
+                {
+                   Target = attacker;
+                   AlertNearbyEnemies();
+                }
+
                 ChangeState(EnemyStates.GettingHit);
+            }
             else
                 ChangeState(EnemyStates.Dead);
         };
@@ -98,5 +107,22 @@ public class EnemyController : MonoBehaviour
             }
         }
         return null;
+    }
+    public void AlertNearbyEnemies()
+    {
+        var colliders = Physics.OverlapBox(transform.position, new Vector3(AlertRange / 2f, 1f, AlertRange / 2f),
+            Quaternion.identity, EnemyManager.i.EnemyLayer);
+
+        foreach (var collider in colliders)
+        {
+            if (collider.gameObject == gameObject) continue;
+
+            var nearbyEnemy = collider.GetComponent<EnemyController>();
+            if (nearbyEnemy != null && nearbyEnemy.Target == null)
+            {
+                nearbyEnemy.Target = Target;
+                nearbyEnemy.ChangeState(EnemyStates.CombatMovement);
+            }
+        }
     }
 }
