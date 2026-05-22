@@ -58,18 +58,24 @@ public class CombatController : MonoBehaviour
         if (Input.GetButtonDown("Attack") && !angam.IsTakingHit )
         {
             var enemy = EnemyManager.i.GetAttackingEnemy();
-            if (enemy != null && enemy.Fighter.IsCounterable && !angam.InAction)
-            {
-                StartCoroutine(angam.PerformCounterAttack(enemy));
-            }
-            else
-            {
-                var enemyToAttack = EnemyManager.i.GetClosesEnemyToDirection(map2PlayerController.i.GetIntentDirection());
-              
+            /* if (enemy != null && enemy.Fighter.IsCounterable && !angam.InAction)
+             {
+                 StartCoroutine(angam.PerformCounterAttack(enemy));
+             }
+             else
+             {
+                 var enemyToAttack = EnemyManager.i.GetClosesEnemyToDirection(map2PlayerController.i.GetIntentDirection());
 
-                angam.TryToAttack(enemyToAttack?.Fighter);
-                CombatMode = true;
-            }
+
+                 angam.TryToAttack(enemyToAttack?.Fighter);
+                 CombatMode = true;
+             }*/
+            var enemyToAttack =
+            EnemyManager.i.GetClosesEnemyToDirection(map2PlayerController.i.GetIntentDirection());
+
+            angam.TryToAttack(enemyToAttack?.Fighter);
+            CombatMode = true;
+            //....................................................................
         }
         if (Input.GetButtonDown("LockOn"))
         {

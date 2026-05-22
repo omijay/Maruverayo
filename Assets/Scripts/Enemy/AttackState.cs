@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -41,6 +41,8 @@ public class AttackState : State<EnemyController>
         }
 
         yield return new WaitUntil(() => enemy.Fighter.Attackstate == Attackstates.Idle);
+
+      
 
 
         enemy.Animator.applyRootMotion = false;

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -79,7 +79,7 @@ public class Angam : MonoBehaviour
             attackDir = vecToTarget.normalized;
             float distance = vecToTarget.magnitude - attack.DistanceFromTarget;
 
-            if (distance > longRangeAttackThreshold && longRangeAttacks.Count>0)
+            if (distance > longRangeAttackThreshold && longRangeAttacks.Count > 0)
             {
                 attack = longRangeAttacks[0];
             }
@@ -102,7 +102,7 @@ public class Angam : MonoBehaviour
         {
             if (IsTakingHit) break;
             timer += Time.deltaTime;
-            float normalizedTime= timer/animState.length;
+            float normalizedTime = timer / animState.length;
 
             // Move the attacker towards the target while performing attack
             if (target != null && attack.MoveToTarget)
@@ -117,37 +117,38 @@ public class Angam : MonoBehaviour
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(attackDir), rotationSpeed * Time.deltaTime);
             }
 
-            if (Attackstate == Attackstates.Windup) 
+            if (Attackstate == Attackstates.Windup)
             {
                 if (InCounter) break;
-                if (normalizedTime >= attack.ImpactStartTime) 
-                { 
-                  Attackstate = Attackstates.Impact;
-                  EnableHitBox(attack);
+                if (normalizedTime >= attack.ImpactStartTime)
+                {
+                    Attackstate = Attackstates.Impact;
+                    EnableHitBox(attack);
                 }
             }
             else if (Attackstate == Attackstates.Impact)
             {
-                if (normalizedTime >=attack.ImpactEndTime)
+                if (normalizedTime >= attack.ImpactEndTime)
                 {
                     Attackstate = Attackstates.Cooldown;
-                   DisableAllColliders();
+                    DisableAllColliders();
                 }
             }
             else if (Attackstate == Attackstates.Cooldown)
             {
-                if (doCombo) 
+                if (doCombo)
                 {
                     doCombo = false;
                     comboCount = (comboCount + 1) % attacks.Count;
 
                     StartCoroutine(Attack(target));
                     yield break;
-                
+
                 }
             }
-            yield return null;
+             yield return null;
         }
+    
 
         Attackstate = Attackstates.Idle;
         comboCount = 0;
@@ -207,6 +208,7 @@ public class Angam : MonoBehaviour
     public IEnumerator PerformCounterAttack(EnemyController opponent)
     {
         InAction = true;
+       
         var dispVec = opponent.transform.position - transform.position;
         dispVec.y = 0f;
         transform.rotation = Quaternion.LookRotation(dispVec);
@@ -233,6 +235,7 @@ public class Angam : MonoBehaviour
         opponent.Fighter.InCounter = false;
 
         InAction = false;
+       
     }
     void EnableHitBox(AttackData attack)
     {
