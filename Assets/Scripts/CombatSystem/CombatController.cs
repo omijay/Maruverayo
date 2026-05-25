@@ -55,6 +55,11 @@ public class CombatController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        // Player dead nam mokuth karanna epa
+        if (angam.Health <= 0)
+        {
+            return;
+        }
         if (Input.GetButtonDown("Attack") && !angam.IsTakingHit )
         {
             var enemy = EnemyManager.i.GetAttackingEnemy();
